@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">ConfianzaMicro</string>
+
+    <!-- Textos de Login -->
+    <string name="login_titulo">ConfianzaMicro</string>
+    <string name="login_subtitle">Inicia sesión para continuar</string>
+
+    <string name="hint_codigo_asesor">Código de asesor</string>
+    <string name="helper_usuario">Tu código personal de asesor</string>
+
+    <string name="hint_contrasena">Contraseña</string>
+    <string name="helper_contrasena">Mínimo 6 caracteres</string>
+
+    <string name="btn_volver">Volver</string>
+    <string name="btn_salir">Salir</string>
+    <string name="btn_ingresar">Ingresar</string>
+
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+
+    <string name="msg_vacio">Complete usuario y contraseña</string>
+    <string name="msg_error_login">Usuario o contraseña incorrectos</string>
+    <string name="msg_ok_login">¡Login exitoso!</string>
+</resources>
