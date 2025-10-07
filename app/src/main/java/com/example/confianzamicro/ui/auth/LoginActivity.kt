@@ -14,7 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.confianzamicro.auth.SessionManager
 import com.example.confianzamicro.data.db.AppDatabase
 import com.example.confianzamicro.repository.AdvisorRepository
-import com.example.confianzamicro.ui.clients.AdvisorsActivity
+import com.example.confianzamicro.ui.activities.AdvisorsActivity
 import com.example.confianzamicro.ui.theme.ConfianzaMicroTheme
 import com.example.confianzamicro.viewmodel.AdvisorViewModel
 import kotlinx.coroutines.launch

@@ -15,7 +15,7 @@
 
         <activity android:name=".ui.menu.AdvisorMenuActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
-        <activity android:name=".ui.clients.AdvisorsActivity" />
+        <activity android:name=".ui.activities.AdvisorsActivity" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.clients.ClientsActivity" />
+        <activity android:name=".ui.activities.ClientsActivity" />
         <activity android:name=".ui.tasks.TasksActivity" />
         <activity android:name=".ui.home.HomeActivity" />
 

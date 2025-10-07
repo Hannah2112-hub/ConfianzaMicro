@@ -1,4 +1,4 @@
-package com.example.confianzamicro.ui.clients
+package com.example.confianzamicro.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
