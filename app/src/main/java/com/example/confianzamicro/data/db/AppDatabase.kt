@@ -5,11 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.confianzamicro.domain.AdvisorEntity
+import com.example.confianzamicro.domain.ClientEntity
 
-@Database(entities = [AdvisorEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [AdvisorEntity::class, ClientEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun advisorDao(): AdvisorDao
+    abstract fun clientDao(): ClientDao
 
     companion object {
         @Volatile
@@ -21,7 +27,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "confianza_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // ✅ esto evita errores si cambió el esquema
+                    .build()
                 INSTANCE = instance
                 instance
             }
