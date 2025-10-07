@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.confianzamicro">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".ConfianzaApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="ConfianzaMicro"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        
-        <activity android:name=".ui.menu.AdvisorMenuActivity" />
 
+        <activity android:name=".ui.menu.AdvisorMenuActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
+        <activity android:name=".ui.clients.AdvisorsActivity" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -24,13 +26,8 @@
             </intent-filter>
         </activity>
 
-        <!-- Clients -->
         <activity android:name=".ui.clients.ClientsActivity" />
-
-        <!-- Tasks -->
         <activity android:name=".ui.tasks.TasksActivity" />
-
-        <!-- Home -->
         <activity android:name=".ui.home.HomeActivity" />
 
     </application>

@@ -1,30 +1,32 @@
-package com.example.confianzamicro.ui.splash;
+package com.example.confianzamicro.ui.splash
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.animation.*;
-import android.widget.ImageView;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.confianzamicro.R;
-import com.example.confianzamicro.ui.auth.LoginActivity;
+import android.content.Intent
+import android.os.Bundle
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import com.example.confianzamicro.R
+import com.example.confianzamicro.ui.auth.LoginActivity
 
-public class SplashActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_splash);
+class SplashActivity : AppCompatActivity() {
 
-        ImageView logo = findViewById(R.id.logo);
-        Animation fade = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        logo.startAnimation(fade);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
 
-        fade.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation a) {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                finish();
+        val logo: ImageView = findViewById(R.id.logo)
+        val fade: Animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        logo.startAnimation(fade)
+
+        fade.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationEnd(animation: Animation?) {
+                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                finish()
             }
-            public void onAnimationStart(Animation a) {}
-            public void onAnimationRepeat(Animation a) {}
-        });
+
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
     }
 }

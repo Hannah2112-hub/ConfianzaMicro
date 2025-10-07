@@ -1,14 +1,20 @@
-package com.example.confianzamicro.auth;
+package com.example.confianzamicro.auth
 
-import com.example.confianzamicro.domain.Advisor;
+import com.example.confianzamicro.domain.AdvisorEntity
 
-public class SessionManager {
-    private static SessionManager I; private Advisor advisor;
-    private SessionManager() {}
-    public static synchronized SessionManager get(){ return I==null? (I=new
-            SessionManager()):I; }
-    public void login(Advisor a){ this.advisor = a; }
-    public Advisor current(){ return advisor; }
-    public boolean isLogged(){ return advisor != null; }
-    public void logout(){ advisor = null; }
+object SessionManager {
+
+    private var advisor: AdvisorEntity? = null
+
+    fun login(a: AdvisorEntity) {
+        advisor = a
+    }
+
+    fun current(): AdvisorEntity? = advisor
+
+    fun isLogged(): Boolean = advisor != null
+
+    fun logout() {
+        advisor = null
+    }
 }

@@ -1,49 +1,37 @@
-package com.example.confianzamicro.ui.menu;
+package com.example.confianzamicro.ui.menu
 
-import android.content.*;
-import android.view.*;
-import android.widget.*;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import com.example.confianzamicro.R;
-import java.util.List;
+import android.content.Context
+import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.confianzamicro.R
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.VH> {
-    private final List<MenuOption> data;
-    private final Context ctx;
+class MenuAdapter(private val ctx: Context, private val data: List<MenuOption>) :
+    RecyclerView.Adapter<MenuAdapter.VH>() {
 
-    public MenuAdapter(Context ctx, List<MenuOption> data){
-        this.ctx = ctx;
-        this.data = data;
+    class VH(v: View) : RecyclerView.ViewHolder(v) {
+        val icon: ImageView = v.findViewById(R.id.imgIcon)
+        val title: TextView = v.findViewById(R.id.txtTitle)
     }
 
-    static class VH extends RecyclerView.ViewHolder {
-        ImageView icon;
-        TextView title;
-        VH(View v){
-            super(v);
-            icon = v.findViewById(R.id.imgIcon);
-            title = v.findViewById(R.id.txtTitle);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_menu, parent, false)
+        return VH(view)
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val m = data[position]
+        holder.icon.setImageResource(m.iconRes)
+        holder.title.text = m.title
+        holder.itemView.setOnClickListener {
+            val intent = Intent(ctx, m.target.java)
+            ctx.startActivity(intent)
         }
     }
 
-    @NonNull
-    @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup p, int vt){
-        return new VH(LayoutInflater.from(p.getContext())
-                .inflate(R.layout.item_menu, p, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull VH h, int i){
-        MenuOption m = data.get(i);
-        h.icon.setImageResource(m.iconRes);
-        h.title.setText(m.title);
-        h.itemView.setOnClickListener(v ->
-                ctx.startActivity(new Intent(ctx, m.target))
-        );
-    }
-
-    @Override
-    public int getItemCount(){ return data.size(); }
+    override fun getItemCount(): Int = data.size
 }
