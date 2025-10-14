@@ -1,39 +1,22 @@
 package com.example.confianzamicro
 
 import android.app.Application
-import androidx.room.Room
-import com.example.confianzamicro.data.db.AppDatabase
-import com.example.confianzamicro.domain.AdvisorEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ConfianzaApp : Application() {
 
     companion object {
-        lateinit var database: AppDatabase
+        lateinit var firestore: FirebaseFirestore
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        database = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "confianza_db"
-        ).build()
+        // Inicializa Firebase
+        FirebaseApp.initializeApp(this)
 
-        // Insertar asesor por defecto si no existe
-        CoroutineScope(Dispatchers.IO).launch {
-            val advisors = database.advisorDao().getAllAdvisors().first()
-            if (advisors.isEmpty()) {
-                val defaultAdvisor = AdvisorEntity(
-                    username = "admin",
-                    password = "1234"
-                )
-                database.advisorDao().insertAdvisor(defaultAdvisor)
-            }
-        }
+        // Instancia global de Firestore
+        firestore = FirebaseFirestore.getInstance()
     }
 }

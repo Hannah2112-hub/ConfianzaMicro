@@ -13,29 +13,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.room.Room
-import com.example.confianzamicro.data.db.AppDatabase
 import com.example.confianzamicro.domain.ClientEntity
-import com.example.confianzamicro.repository.ClientRepository
 import com.example.confianzamicro.ui.theme.ConfianzaMicroTheme
-import com.example.confianzamicro.viewmodel.ClientViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ClientsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "confianza_db"
-        ).build()
-        val repository = ClientRepository(db.clientDao())
-
         setContent {
             ConfianzaMicroTheme {
-                ClientsScreen(repository)
+                ClientsScreen()
             }
         }
     }
@@ -43,27 +32,27 @@ class ClientsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientsScreen(repository: ClientRepository) {
-    val viewModel: ClientViewModel = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-            return ClientViewModel(repository) as T
-        }
-    })
-
-    val clients by viewModel.clients.collectAsState()
+fun ClientsScreen() {
+    val db = FirebaseFirestore.getInstance()
     val coroutineScope = rememberCoroutineScope()
+    var clients by remember { mutableStateOf(listOf<ClientEntity>()) }
 
     var name by remember { mutableStateOf("") }
     var dni by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadClients()
+    suspend fun loadClients() {
+        val snapshot = db.collection("clients").get().await()
+        clients = snapshot.documents.mapNotNull {
+            it.toObject(ClientEntity::class.java)?.copy(id = it.id)
+        }
     }
 
+    LaunchedEffect(Unit) { loadClients() }
+
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Gestión de Clientes") }) }
+        topBar = { TopAppBar(title = { Text("Gestión de Clientes (Firebase)") }) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -71,77 +60,44 @@ fun ClientsScreen(repository: ClientRepository) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Nombre") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = dni,
-                onValueChange = { dni = it },
-                label = { Text("DNI") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                label = { Text("Teléfono") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = address,
-                onValueChange = { address = it },
-                label = { Text("Dirección") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Nombre") })
+            OutlinedTextField(value = dni, onValueChange = { dni = it }, label = { Text("DNI") })
+            OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Teléfono") })
+            OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Dirección") })
 
             Button(
                 onClick = {
                     if (name.isNotBlank() && dni.isNotBlank()) {
                         coroutineScope.launch {
-                            viewModel.addClient(
-                                ClientEntity(
-                                    name = name,
-                                    dni = dni,
-                                    phone = phone,
-                                    address = address
+                            db.collection("clients").add(
+                                mapOf(
+                                    "name" to name,
+                                    "dni" to dni,
+                                    "phone" to phone,
+                                    "address" to address
                                 )
-                            )
-                            name = ""
-                            dni = ""
-                            phone = ""
-                            address = ""
+                            ).await()
+                            name = ""; dni = ""; phone = ""; address = ""
+                            loadClients()
                         }
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
             ) {
                 Text("Registrar Cliente")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                "Lista de Clientes",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Text("Lista de Clientes", style = MaterialTheme.typography.titleMedium)
 
             LazyColumn {
                 items(clients) { client ->
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(8.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -152,7 +108,13 @@ fun ClientsScreen(repository: ClientRepository) {
                             }
                             IconButton(onClick = {
                                 coroutineScope.launch {
-                                    viewModel.deleteClient(client)
+                                    val snapshot = db.collection("clients")
+                                        .whereEqualTo("dni", client.dni)
+                                        .get().await()
+                                    for (doc in snapshot.documents) {
+                                        db.collection("clients").document(doc.id).delete().await()
+                                    }
+                                    loadClients()
                                 }
                             }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Eliminar")

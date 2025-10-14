@@ -8,31 +8,38 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AdvisorViewModel(private val repository: AdvisorRepository) : ViewModel() {
+class AdvisorViewModel(
+    private val repository: AdvisorRepository = AdvisorRepository() // ahora no necesita DAO
+) : ViewModel() {
 
     private val _advisors = MutableStateFlow<List<AdvisorEntity>>(emptyList())
     val advisors: StateFlow<List<AdvisorEntity>> = _advisors
 
+    // 🔹 Carga todos los asesores desde Firestore
     fun loadAdvisors() {
         viewModelScope.launch {
-            repository.getAllAdvisors().collect { list ->
-                _advisors.value = list
-            }
+            val list = repository.getAllAdvisors()
+            _advisors.value = list
         }
     }
 
+    // 🔹 Agrega un nuevo asesor
     fun addAdvisor(advisor: AdvisorEntity) {
         viewModelScope.launch {
             repository.insertAdvisor(advisor)
+            loadAdvisors() // recargar lista después de insertar
         }
     }
 
+    // 🔹 Elimina un asesor
     fun deleteAdvisor(advisor: AdvisorEntity) {
         viewModelScope.launch {
             repository.deleteAdvisor(advisor)
+            loadAdvisors() // recargar lista después de eliminar
         }
     }
 
+    // 🔹 Login
     suspend fun login(username: String, password: String): AdvisorEntity? {
         return repository.login(username, password)
     }

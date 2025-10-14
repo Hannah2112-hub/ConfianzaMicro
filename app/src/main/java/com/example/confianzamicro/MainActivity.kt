@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.confianzamicro.data.db.AppDatabase
 import com.example.confianzamicro.domain.AdvisorEntity
 import com.example.confianzamicro.repository.AdvisorRepository
 import com.example.confianzamicro.ui.theme.ConfianzaMicroTheme
@@ -20,8 +19,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val db = AppDatabase.getInstance(applicationContext)
-        val repository = AdvisorRepository(db.advisorDao())
+        // Repositorio basado en Firestore
+        val repository = AdvisorRepository()
 
         setContent {
             ConfianzaMicroTheme {
@@ -37,7 +36,6 @@ fun LoginAndRegisterScreen(repository: AdvisorRepository) {
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
 
-    // Registro opcional
     var newUsername by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var showRegister by remember { mutableStateOf(false) }
@@ -101,7 +99,10 @@ fun LoginAndRegisterScreen(repository: AdvisorRepository) {
                 if (newUsername.isNotBlank() && newPassword.isNotBlank()) {
                     scope.launch {
                         repository.insertAdvisor(
-                            AdvisorEntity(username = newUsername, password = newPassword)
+                            AdvisorEntity(
+                                username = newUsername,
+                                password = newPassword
+                            )
                         )
                         newUsername = ""
                         newPassword = ""
