@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "264619372985",
+    "project_id": "confianzamicro-b95f0",
+    "storage_bucket": "confianzamicro-b95f0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264619372985:android:51d3394b3327527bbd4668",
+        "android_client_info": {
+          "package_name": "com.example.confianzamicro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBcVRnL0AlZFh6LXQe42qb0zZUPpC3HeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

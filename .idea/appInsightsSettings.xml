@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.confianzamicro" />
+                  <option name="mobileSdkAppId" value="1:264619372985:android:51d3394b3327527bbd4668" />
+                  <option name="projectId" value="confianzamicro-b95f0" />
+                  <option name="projectNumber" value="264619372985" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

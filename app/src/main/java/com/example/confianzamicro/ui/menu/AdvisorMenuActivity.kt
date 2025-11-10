@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.confianzamicro.ui.activities.ClientsActivity
+import com.example.confianzamicro.ui.activities.TransactionsActivity
 import com.example.confianzamicro.ui.tasks.TasksActivity
 import com.example.confianzamicro.ui.theme.ConfianzaMicroTheme
 import kotlin.reflect.KClass
@@ -36,11 +37,9 @@ class AdvisorMenuActivity : ComponentActivity() {
     fun MenuScreen() {
         val items = listOf(
             MenuOption("Clientes", android.R.drawable.ic_menu_agenda, ClientsActivity::class),
-            MenuOption("Tareas", android.R.drawable.ic_menu_edit, TasksActivity::class),
-            MenuOption("Cobranza", android.R.drawable.ic_menu_send, TasksActivity::class),
-            MenuOption("Solicitudes", android.R.drawable.ic_menu_upload, TasksActivity::class),
-            MenuOption("Reportes", android.R.drawable.ic_menu_view, TasksActivity::class),
-            MenuOption("Configuración", android.R.drawable.ic_menu_manage, TasksActivity::class)
+            MenuOption("Transacciones", android.R.drawable.ic_menu_sort_by_size,
+                TransactionsActivity::class),
+
         )
 
         Scaffold(
